@@ -15,10 +15,5 @@ add_executable(Servidor
         ChSocket/Socket_Cliente.h
         ChSocket/Socket_Servidor.c
         ChSocket/Socket_Servidor.h
-        cmake-build-debug/cmake_install.cmake
-        cmake-build-debug/CMakeCache.txt
-        cmake-build-debug/Makefile
-        cmake-build-debug/Server
-        cmake-build-debug/Server.cbp
         CMakeLists.txt
-        main.c)
+        main.c constants.c constants.h)

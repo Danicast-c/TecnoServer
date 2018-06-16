@@ -32,7 +32,7 @@ int main()
 
     /* Se abre el socket servidor, avisando por pantalla y saliendo si hay
      * algún problema */
-    masterSocket = Abre_Socket_Inet ("http-alt");
+    masterSocket = Abre_Socket_Inet ("dlsrap");
     if (masterSocket == -1)
     {
         perror ("Error al abrir servidor, puerto ya utilizado");
