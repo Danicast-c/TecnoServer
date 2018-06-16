@@ -9,6 +9,8 @@
 #include <netinet/in.h>
 #include <json-c/json.h>
 
+#include "datamanager.h"
+
 #define MAX_CLIENTS 10
 
 
@@ -19,7 +21,7 @@ void sendString(int *clientes, int cliente, const char* dato);
 char* receiveString(int *clientes,int cliente, int size);
 int main()
 {
-    json_object* jsonObject = json_tokener_parse("\"booleanProperty\": true");
+    data_toSend();
 
     int masterSocket;				/* Descriptor del socket servidor */
     int socketCliente[MAX_CLIENTS];/* Descriptores de sockets con clientes */
@@ -39,8 +41,9 @@ int main()
         exit (-1);
     }
 
-    while (1)
+    while (0)
     {
+
         //Borra sockets inactivos al inicio de cada iteración
         trimClients(socketCliente, &numeroClientes);
         //Se tiene que limpiar, inicializar y rellenar los file descriptors de los sockets cada vez, para que select sepa cual utilizar

@@ -16,4 +16,4 @@ add_executable(Servidor
         ChSocket/Socket_Servidor.c
         ChSocket/Socket_Servidor.h
         CMakeLists.txt
-        main.c constants.c constants.h)
+        main.c constants.c constants.h datamanager.c datamanager.h)
