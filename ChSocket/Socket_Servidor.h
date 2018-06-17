@@ -1,9 +1,3 @@
-/**
- * Javier Abell�n. 14 Abril 2003
- *
- * Funciones para que un servidor puede abrir sockets para atender un servicio y aceptar
- * conexiones de un cliente.
- */
 #ifndef _SOCKET_SERVIDOR_H
 #define _SOCKET_SERVIDOR_H
 

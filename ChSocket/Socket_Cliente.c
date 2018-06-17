@@ -1,12 +1,3 @@
-/* Javier Abell�n, 20 Junio 2000
- *
- * Funciones para abrir/establecer sockets de un cliente con un servidor.
- *
- * MODIFICACIONES:
- * 4 Septiembre 2003. A�adida funci�n Abre_Conexion_Udp()
- */
-
-
 /*
 * Includes del sistema
 */
@@ -16,7 +7,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
 
 /*

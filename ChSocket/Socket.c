@@ -1,11 +1,3 @@
-/*
-* Javier Abellan, 20 Jun 2000
-*
-* Funciones de lectura y escritura en sockets
-*
-* MODIFICACIONES:
-* 4 Septiembre 2003: A�adidas funciones para sockets UDP.
-*/
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h> 
@@ -13,9 +5,8 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <errno.h>
-#include <stdio.h>
 
-#include "Socket.h"f
+#include "Socket.h"
 
 /*
 * Lee datos del socket. Supone que se le pasa un buffer con hueco 

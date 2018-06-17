@@ -1,12 +1,3 @@
-/**
- * Javier Abell�n, 20 Junio 2000
- *
- * Funciones de lectura y escritura de la librer�a de sockets.
- *
- * MODIFICACIONES:
- * 4 de Septiembre de 2003. A�adidas funciones Lee_Socket_Udp(), 
- *    Escribe_Socket_Udp() y Dame_Direccion_Udp()
- */
 #ifndef _SOCKET_H
 #define _SOCKET_H
 

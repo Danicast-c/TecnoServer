@@ -1,13 +1,3 @@
-/*
-* Javier Abellan, 20 Jun 2000
-*
-* Funciones para la apertura de un socket servidor y la conexion con sus
-* clientes
-*
-* MODIFICACIONES:
-* 4 Septiembre 2003: A�adida funci�n Abre_Socket_Udp() 
-*/
-
 /* Includes del sistema */
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -15,7 +5,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <unistd.h>
-#include <errno.h>
 #include <stdlib.h>
 
 /*
