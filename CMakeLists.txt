@@ -23,8 +23,12 @@ add_executable(TecnoServer
         cmake-build-debug/Server
         cmake-build-debug/Server.cbp
         CMakeLists.txt
-        main.c constants.c constants.h datamanager.c datamanager.h)
-        main.c constants.c constants.h
-        main.c ChSocket/Commands.h ChSocket/Commands.c)
+        constants.c
+        constants.h
+        datamanager.c
+        datamanager.h
+        ChSocket/Commands.h
+        ChSocket/Commands.c
+        main.c)
 
 target_link_libraries(TecnoServer ${CMAKE_THREAD_LIBS_INIT})
