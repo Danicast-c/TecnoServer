@@ -23,6 +23,7 @@ add_executable(TecnoServer
         cmake-build-debug/Server
         cmake-build-debug/Server.cbp
         CMakeLists.txt
+        main.c constants.c constants.h datamanager.c datamanager.h)
         main.c constants.c constants.h
         main.c ChSocket/Commands.h ChSocket/Commands.c)
 

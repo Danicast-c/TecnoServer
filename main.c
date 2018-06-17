@@ -7,6 +7,11 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <Commands.h>
+#include <json-c/json.h>
+
+#include "datamanager.h"
+
+#define MAX_CLIENTS 10
 
 int main()
 {
@@ -15,6 +20,32 @@ int main()
     int numeroClientes = 0;                /* Número clientes conectados */
     fd_set readFs;                        /* Descriptores de interes para select() */
     int buffer_size;                    /* Dice de que tamanho es el string que va a entrar */
+    json_object* jp1 = json_object_new_object();
+
+    json_object *p1_id = json_object_new_int(12);
+    json_object *p1_x = json_object_new_int(56);
+    json_object *p1_pos = json_object_new_int(34);
+    json_object *p1_speed = json_object_new_int(78);
+    json_object *p1_life = json_object_new_int(90);
+
+    json_object_object_add(jp1,"id", p1_id );
+    json_object_object_add(jp1,"x", p1_x);
+    json_object_object_add(jp1,"position", p1_pos);
+    json_object_object_add(jp1,"speed", p1_speed);
+    json_object_object_add(jp1,"life", p1_life);
+
+
+    json_Parser(jp1,1);
+
+    data_toSend();
+
+    //data_toSend();
+
+    int masterSocket;				/* Descriptor del socket servidor */
+    int socketCliente[MAX_CLIENTS];/* Descriptores de sockets con clientes */
+    int numeroClientes = 0;			/* Número clientes conectados */
+    fd_set readFs;	/* Descriptores de interes para select() */
+    int buffer_size;							/* Dice de que tamanho es el string que va a entrar */
     int maximo;							/* Número de descriptor más grande */
     int i;								/* Para los for */
 
@@ -29,13 +60,14 @@ int main()
         exit (-1);
     }
 
-    while (1)
+    while (0)
     {
+
         //Borra sockets inactivos al inicio de cada iteración
         trimClients(socketCliente, &numeroClientes);
         //Se tiene que limpiar, inicializar y rellenar los file descriptors de los sockets cada vez, para que select sepa cual utilizar
         FD_ZERO (&readFs);
-        FD_SET (masterSocket, &readFs); // NOLINT
+        FD_SET (masterSocket, &readFs);
         /* Se añaden para select() los sockets con los clientes ya conectados */
         for (i=0; i<numeroClientes; i++)
             FD_SET (socketCliente[i], &readFs);
@@ -53,7 +85,7 @@ int main()
         /* Se comprueba si algún cliente ya conectado ha enviado algo */
         for (i=0; i<numeroClientes; i++)
         {
-            if (FD_ISSET (socketCliente[i], &readFs)) // NOLINT
+            if (FD_ISSET (socketCliente[i], &readFs))
             {
                 /* Se lee lo enviado por el cliente y se escribe en pantalla */
                 if ((Lee_Socket (socketCliente[i], (char *)&buffer_size, sizeof(int)) > 0)) { //si es mayor a 0 quiere decir que está entrando un dato
