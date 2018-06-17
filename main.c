@@ -37,15 +37,15 @@ int main()
 
     json_Parser(jp1,1);
 
-    data_toSend();
+    json_object* prueba = data_toSend();
 
     //data_toSend();
 
-    int masterSocket;				/* Descriptor del socket servidor */
-    int socketCliente[MAX_CLIENTS];/* Descriptores de sockets con clientes */
-    int numeroClientes = 0;			/* Número clientes conectados */
-    fd_set readFs;	/* Descriptores de interes para select() */
-    int buffer_size;							/* Dice de que tamanho es el string que va a entrar */
+//    int masterSocket;				/* Descriptor del socket servidor */
+//    int socketCliente[MAX_CLIENTS];/* Descriptores de sockets con clientes */
+//    int numeroClientes = 0;			/* Número clientes conectados */
+//    fd_set readFs;	/* Descriptores de interes para select() */
+//    int buffer_size;							/* Dice de que tamanho es el string que va a entrar */
     int maximo;							/* Número de descriptor más grande */
     int i;								/* Para los for */
 

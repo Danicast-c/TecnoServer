@@ -11,7 +11,7 @@
 #include <json-c/json.h>
 
 void json_Parser(json_object * jplayer, int playerId);
-void data_toSend ();
+json_object* data_toSend ();
 
 //----------------------Player_# = [id,x,pos,speed,life]
 extern char player_1[5];

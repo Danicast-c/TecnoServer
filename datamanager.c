@@ -82,7 +82,7 @@ void json_Parser(json_object * jplayer,int player_Id){
 
 
 
-void data_toSend (){
+json_object* data_toSend (){
 
     int huecos [3][3] = {{124,4,500},{174,7,500},{217,10,500}};
 
@@ -204,4 +204,6 @@ void data_toSend (){
 
 
     printf ("The json object created: %s",json_object_to_json_string(masterJson));
+
+    return masterJson ;
 }
