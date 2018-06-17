@@ -3,7 +3,6 @@
 //
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <json-c/json.h>
 #include "datamanager.h"
 
@@ -13,9 +12,9 @@ char player_3[5]={0,0,0,0,0};
 char player_4[5]={0,0,0,0,0};
 
 
-void json_Parser(json_object * jplayer,int player_Id){
+void json_Parser(json_object *jplayer, int player_Id) {
 
-
+    pthread_mutex_lock(&lock);
 
     printf ("The json object created: %s \n",json_object_to_json_string(jplayer));
 
@@ -77,7 +76,9 @@ void json_Parser(json_object * jplayer,int player_Id){
 //        printf("value: %d", json_object_get_int(val));
 //        }
 //
-   }
+
+    pthread_mutex_unlock(&lock);
+}
 
 
 
@@ -202,8 +203,7 @@ json_object* data_toSend (){
     json_object_object_add(masterJson,"huecos", obsArray);
 
 
-
-    printf ("The json object created: %s",json_object_to_json_string(masterJson));
+    printf("The json object created: %s\n", json_object_to_json_string(masterJson));
 
     return masterJson ;
 }

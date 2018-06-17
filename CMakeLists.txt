@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TecnServer)
+project(TecnoServer)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -10,14 +10,13 @@ find_package(Threads)
 add_compile_options("-L/lib -ljson-c")
 link_libraries("-L/lib -ljson-c")
 
-add_executable(Servidor
+add_executable(TecnoServer
         ChSocket/Socket.c
         ChSocket/Socket.h
         ChSocket/Socket_Cliente.c
         ChSocket/Socket_Cliente.h
         ChSocket/Socket_Servidor.c
         ChSocket/Socket_Servidor.h
-
 
         CMakeLists.txt
         constants.c
@@ -28,4 +27,4 @@ add_executable(Servidor
         ChSocket/Commands.c
         main.c)
 
-target_link_libraries(Servidor ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(TecnoServer ${CMAKE_THREAD_LIBS_INIT})

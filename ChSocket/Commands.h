@@ -18,7 +18,7 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 
-#define MAX_CLIENTS 10
+#define MAX_CLIENTS 4
 
 void newClient(int servidor, int *clientes, int *nClientes);
 
@@ -28,10 +28,10 @@ void trimClients(int *tabla, int *n);
 
 void sendString(int *clientes, int cliente, const char *dato);
 
-char *receiveString(int *clientes, int cliente, int str_len);
+char *receiveString(const int *cliente, int str_len);
 
-void sendJson(int *clientes, int cliente, json_object *dato);
+json_object *receiveJson(const int *cliente, int str_len);
 
-json_object *receiveJson(int *clientes, int cliente, int str_len);
+void sendJson(const int *cliente, json_object *dato);
 
 #endif //TECNSERVER_COMMANDS_H

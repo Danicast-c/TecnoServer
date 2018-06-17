@@ -23,22 +23,8 @@ void newClient(int servidor, int *clientes, int *nClientes) {
         return;
     }
 
-    json_object *jp1 = json_object_new_object();
 
-    json_object *p1_id = json_object_new_int(12);
-    json_object *p1_x = json_object_new_int(56);
-    json_object *p1_pos = json_object_new_int(34);
-    json_object *p1_speed = json_object_new_int(78);
-    json_object *p1_lifes = json_object_new_int(90);
-
-    json_object_object_add(jp1, "id", p1_id);
-    json_object_object_add(jp1, "x", p1_x);
-    json_object_object_add(jp1, "position", p1_pos);
-    json_object_object_add(jp1, "speed", p1_speed);
-    json_object_object_add(jp1, "lives", p1_lifes);
-
-    sendJson(clientes, *nClientes, jp1);
-    //sendString(clientes, *nClientes,"Bienvenido");
+    sendString(clientes, *nClientes, "Bienvenido");
     /* Escribe en pantalla que ha aceptado al cliente y vuelve */
     printf("Aceptado cliente %d\n", *nClientes);
 
@@ -98,28 +84,26 @@ void sendString(int *clientes, int cliente, const char *dato) {
 
 }
 
-char *receiveString(int *clientes, int cliente, const int str_len) {
-    char *string = (char *) malloc(str_len * sizeof(char));
-    Lee_Socket(clientes[(cliente) - 1], string, str_len);// se lee el string
-    return string;
-}
-
-json_object *receiveJson(int *clientes, int cliente, const int str_len) {
-    char *mensaje = receiveString(clientes, cliente, str_len);
-    struct json_object *jsonObject = malloc(sizeof jsonObject);
-    jsonObject = json_tokener_parse(mensaje);
-    free(mensaje);
-    return jsonObject;
-}
-
-void sendJson(int *clientes, int cliente, json_object *dato) {
+void sendJson(const int *cliente, json_object *dato) {
     int str_len = (int) strlen(json_object_to_json_string(dato)) + 1; //+1 para que meta el caracter final
     char jsonString[str_len];
     strcpy(jsonString, json_object_to_json_string(dato));
     // Se transforna int a formato de red
     int Aux = htonl((uint32_t) str_len);
-    Escribe_Socket(clientes[(cliente) - 1], (char *) &Aux, sizeof(int)); //se envia longitud
-    Escribe_Socket(clientes[(cliente) - 1], jsonString, str_len);// se envia string
-    printf("Paquete enviado:\nlongitud: %d\ndato: %s\n", str_len - 1, jsonString);
+    Escribe_Socket(*cliente, (char *) &Aux, sizeof(int)); //se envia longitud
+    Escribe_Socket(*cliente, jsonString, str_len);// se envia string
+}
 
+char *receiveString(const int *cliente, const int str_len) {
+    char *string = (char *) malloc(str_len * sizeof(char));
+    Lee_Socket(*cliente, string, str_len);// se lee el string
+    return string;
+}
+
+json_object *receiveJson(const int *cliente, const int str_len) {
+    char *mensaje = receiveString(cliente, str_len);
+    json_object *jsonObject = malloc(sizeof jsonObject);
+    jsonObject = json_tokener_parse(mensaje);
+    free(mensaje);
+    return jsonObject;
 }
