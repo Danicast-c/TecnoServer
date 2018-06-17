@@ -21,7 +21,26 @@ void sendString(int *clientes, int cliente, const char* dato);
 char* receiveString(int *clientes,int cliente, int size);
 int main()
 {
+    json_object* jp1 = json_object_new_object();
+
+    json_object *p1_id = json_object_new_int(12);
+    json_object *p1_x = json_object_new_int(56);
+    json_object *p1_pos = json_object_new_int(34);
+    json_object *p1_speed = json_object_new_int(78);
+    json_object *p1_life = json_object_new_int(90);
+
+    json_object_object_add(jp1,"id", p1_id );
+    json_object_object_add(jp1,"x", p1_x);
+    json_object_object_add(jp1,"position", p1_pos);
+    json_object_object_add(jp1,"speed", p1_speed);
+    json_object_object_add(jp1,"life", p1_life);
+
+
+    json_Parser(jp1,1);
+
     data_toSend();
+
+    //data_toSend();
 
     int masterSocket;				/* Descriptor del socket servidor */
     int socketCliente[MAX_CLIENTS];/* Descriptores de sockets con clientes */

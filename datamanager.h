@@ -10,6 +10,7 @@
 #include <string.h>
 #include <json-c/json.h>
 
+void json_Parser(json_object * jplayer, int playerId);
 void data_toSend ();
 
 //----------------------Player_# = [id,x,pos,speed,life]
