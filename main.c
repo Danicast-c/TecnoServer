@@ -41,6 +41,9 @@ int main()
         //pthread_join(threadListener, NULL);
     }
 
+
+
+
     while (1) {
         printf("Escriba el comando a ejecutar (crearBomba, crearVida o crearBoost): ");
         char *comando = getLine();
