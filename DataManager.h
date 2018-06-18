@@ -24,18 +24,21 @@ json_object* data_toSend ();
 void crearBomba(int x, int pos);
 void crearBoost(int x, int pos);
 void crearVida(int x, int pos);
+void bomb_Remove(int id);
+void life_Remove(int id);
+void boost_Remove(int id);
 
 void cleanUpPlayer(const int *player);
 
 //----------------------Player_# = [id,x,pos,speed,life]
 
-double bombas[50][3];
+double bombas[50][4];
 int bombas_index;
 
-double vidas[50][3];
+double vidas[50][4];
 int vidas_index;
 
-double boost[50][3];
+double boost[50][4];
 int boost_index;
 
 

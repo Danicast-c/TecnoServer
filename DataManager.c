@@ -11,19 +11,19 @@ struct Player player_2;
 struct Player player_3;
 struct Player player_4;
 
-double bombas[50][3] = {{124, 4,  500},
-                        {174, 7,  500},
-                        {217, 10, 500}};
+double bombas[50][4] = {{1,5, 500,  1},
+                        {2,2, 2000,  1},
+                        {3,6, 3000, 1}};
 int bombas_index = 3;
 
-double vidas[50][3] = {{124, 4,  500},
-                       {174, 7,  500},
-                       {217, 10, 500}};
+double vidas[50][4] = {{1,7, 550,  1},
+                       {2,2, 2050,  1},
+                       {3,1, 3050, 1}};
 int vidas_index = 3;
 
-double boost[50][3] = {{124, 4,  500},
-                       {174, 7,  500},
-                       {217, 10, 500}};
+double boost[50][4] = {{1,5, 600,  1},
+                       {2,8, 2100,  1},
+                       {3,9, 3050, 1}};
 int boost_index = 3;
 
 /**
@@ -61,9 +61,10 @@ void crearVida(int x, int pos){
         double x_tosend = (x - 5.0) / 5;
         double pos_tosend = pos;
 
-        vidas[vidas_index][0] = x_tosend;
-        vidas[vidas_index][1] = pos_tosend;
-        vidas[vidas_index][2] = 1;
+        vidas[vidas_index][0] = vidas_index+1;
+        vidas[vidas_index][1] = x_tosend;
+        vidas[vidas_index][2] = pos_tosend;
+        vidas[vidas_index][3] = 1;
         vidas_index+=1;
 
 
@@ -84,9 +85,10 @@ void crearBoost(int x, int pos){
         double x_tosend = (x - 5.0) / 5;
         double pos_tosend = pos;
 
-        boost[boost_index][0] = x_tosend;
-        boost[boost_index][1] = pos_tosend;
-        boost[boost_index][2] = 1;
+        boost[boost_index][0] = boost_index+1;
+        boost[boost_index][1] = x_tosend;
+        boost[boost_index][2] = pos_tosend;
+        boost[boost_index][3] = 1;
         boost_index+=1;
 
 
@@ -101,11 +103,22 @@ void crearBoost(int x, int pos){
  * @param jplayer   recibe el json_object que fue recibido mediante el socket
  * @param player_Id un valor numerico que indica el numero de jugador que envio el socket
  */
+void bomb_Remove(int id) {
+    bombas[id-1][3]=0;
+}
+void vidas_Remove(int id) {
+    vidas[id-1][3]=0;
+}
+void boost_Remove(int id) {
+    boost[id-1][3]=0;
+}
+
+
 void json_Parser(json_object *jplayer) {
 
     pthread_mutex_lock(&lock);
 
-    //printf ("The json object created: %s \n",json_object_to_json_string(jplayer));
+    printf ("The json object created: %s \n",json_object_to_json_string(jplayer));
 
     int id = json_object_get_int(json_object_object_get(jplayer,"id"));
     double x = json_object_get_double(json_object_object_get(jplayer, "x"));
@@ -264,15 +277,17 @@ json_object* data_toSend (){
     int imax = sizeof(bombas)/12;
 
 
-    for(int i=0;i<imax;i++ ) {
+    for(int i=0;i<bombas_index;i++ ) {
 
-        if (bombas[i][2] != 0) {
+        if (bombas[i][2] != 0.0) {
             json_object *eleh = json_object_new_object();
 
-            json_object *hpos = json_object_new_double(bombas[i][0]);
+            json_object *id = json_object_new_double(bombas[i][0]);
             json_object *hx = json_object_new_double(bombas[i][1]);
-            json_object *htime = json_object_new_double(bombas[i][2]);
+            json_object *hpos = json_object_new_double(bombas[i][2]);
+            json_object *htime = json_object_new_double(bombas[i][3]);
 
+            json_object_object_add(eleh, "id", id);
             json_object_object_add(eleh, "x", hx);
             json_object_object_add(eleh, "position", hpos);
             json_object_object_add(eleh, "active", htime);
@@ -288,15 +303,17 @@ json_object* data_toSend (){
     int vimax = sizeof(vidas)/12;
 
 
-    for(int i=0;i<vimax;i++ ) {
+    for(int i=0;i<vidas_index;i++ ) {
 
         if (vidas[i][2] != 0) {
             json_object *eleh = json_object_new_object();
 
-            json_object *hpos = json_object_new_double(vidas[i][0]);
+            json_object *id = json_object_new_double(vidas[i][0]);
             json_object *hx = json_object_new_double(vidas[i][1]);
-            json_object *htime = json_object_new_double(vidas[i][2]);
+            json_object *hpos = json_object_new_double(vidas[i][2]);
+            json_object *htime = json_object_new_double(vidas[i][3]);
 
+            json_object_object_add(eleh, "id", id);
             json_object_object_add(eleh, "x", hx);
             json_object_object_add(eleh, "position", hpos);
             json_object_object_add(eleh, "active", htime);
@@ -312,15 +329,17 @@ json_object* data_toSend (){
     int bimax = sizeof(vidas)/12;
 
 
-    for(int i=0;i<bimax;i++ ) {
+    for(int i=0;i<boost_index;i++ ) {
 
         if (vidas[i][2] != 0) {
             json_object *eleh = json_object_new_object();
 
-            json_object *hpos = json_object_new_double(boost[i][0]);
+            json_object *id = json_object_new_double(boost[i][0]);
             json_object *hx = json_object_new_double(boost[i][1]);
-            json_object *htime = json_object_new_double(boost[i][2]);
+            json_object *hpos = json_object_new_double(boost[i][2]);
+            json_object *htime = json_object_new_double(boost[i][3]);
 
+            json_object_object_add(eleh, "id", id);
             json_object_object_add(eleh, "x", hx);
             json_object_object_add(eleh, "position", hpos);
             json_object_object_add(eleh, "active", htime);
@@ -349,10 +368,10 @@ json_object* data_toSend (){
 
     json_object_object_add(masterJson,"vidas", vidasArray);
 
-    json_object_object_add(masterJson,"boost", vidasArray);
+    json_object_object_add(masterJson,"boost", boostArray);
 
 
-    //printf("The json object created: %s\n", json_object_to_json_string(masterJson));
+    printf("The json object created: %s\n", json_object_to_json_string(masterJson));
 
     return masterJson ;
 }

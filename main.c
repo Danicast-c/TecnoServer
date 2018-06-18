@@ -23,8 +23,14 @@ char *getLine(void);
 
 void cleanUp(int *player, int *socketCliente);
 
+/**
+ * Funcion main que controla el servidor
+ * @return
+ */
 int main()
 {
+
+
     pthread_t threadListener;               /* Thread que escucha por clientes*/
     int err = pthread_create(&(threadListener), NULL, &escucharPorClientes, NULL);
 
@@ -58,6 +64,10 @@ int main()
     }
 }
 
+/**
+ * Funcion que se encarga de la comunicacion entre el servidor y cliente,, crea el socket y abre el puerto
+ * hace el manejo de clientes
+ */
 void escucharPorClientes(void) {
     int sockerServidor;                     /* Descriptor del socket servidor */
     fd_set readFs;                          /* Descriptores de interes para select() */
@@ -74,6 +84,8 @@ void escucharPorClientes(void) {
         exit (-1);
     }
 
+
+    json_object * jsp = data_toSend();
     while (1) {
 
         //Borra sockets inactivos al inicio de cada iteración
@@ -109,6 +121,10 @@ void escucharPorClientes(void) {
     }
 }
 
+/**
+ * Funcion que recibe el socket y se encarga de la comunicacion con el cliente conectado
+ * @param socketCliente es la direccion, de socket creado
+ */
 void servidorClienteComunicacion(void *socketCliente) {
 
     int cancelability;
@@ -148,7 +164,10 @@ void servidorClienteComunicacion(void *socketCliente) {
     }
 }
 
-
+/**
+ * Se encarga de leer la proxima linea
+ * @return un array de caracteres con lo que se escribio
+ */
 char *getLine(void) {
     char *line = malloc(100), *linep = line;
     size_t lenmax = 100, len = lenmax;
