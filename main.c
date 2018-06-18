@@ -11,6 +11,7 @@
 
 #include "DataManager.h"
 
+int numeroClientes = 0;                 /* Número clientes conectados */
 int socketArrayClientes[MAX_CLIENTS] = {-1, -1, -1, -1};     /* Descriptores de sockets con clientes */
 pthread_t threadArray[MAX_CLIENTS];                 /* Array de threads*/
 
@@ -19,6 +20,8 @@ void servidorClienteComunicacion(void *ClientSocket);
 void escucharPorClientes(void);
 
 char *getLine(void);
+
+void cleanUp(int *player, int *socketCliente);
 
 int main()
 {
@@ -57,7 +60,6 @@ int main()
 
 void escucharPorClientes(void) {
     int sockerServidor;                     /* Descriptor del socket servidor */
-    int numeroClientes = 0;                 /* Número clientes conectados */
     fd_set readFs;                          /* Descriptores de interes para select() */
     int buffer_size;                        /* Dice de que tamanho es el string que va a entrar */
     int maximo;                                /* Número de descriptor más grande */
@@ -72,8 +74,7 @@ void escucharPorClientes(void) {
         exit (-1);
     }
 
-    while (1)
-    {
+    while (1) {
 
         //Borra sockets inactivos al inicio de cada iteración
         trimClients(socketArrayClientes, &numeroClientes);
@@ -94,19 +95,16 @@ void escucharPorClientes(void) {
         select (maximo + 1, &readFs, NULL, NULL, NULL);//Aqui queda esperando el servidor a que haya actividad en algun fd(file descriptor) activo
 
         if (FD_ISSET (sockerServidor, &readFs)) {//verifica si hay clientes nuevos y los registra
-            newClient(sockerServidor, socketArrayClientes, &numeroClientes);
-            int err = pthread_create(&(threadArray[i]), NULL, &servidorClienteComunicacion,
-                                     (void *) &socketArrayClientes[numeroClientes - 1]);
+            int posicionEnArray = 0;
+            newClient(sockerServidor, socketArrayClientes, &numeroClientes, &posicionEnArray);
+            int err = pthread_create(&(threadArray[posicionEnArray]), NULL, &servidorClienteComunicacion,
+                                     (void *) &socketArrayClientes[posicionEnArray]);
 
             if (err != 0)
                 printf("\ncan't create thread :[%s]", strerror(err));
             else {
-                pthread_detach((threadArray[i]));
+                pthread_detach((threadArray[posicionEnArray]));
             }
-        }
-
-        if (numeroClientes = 0) {
-            cleanPlayers();
         }
     }
 }
@@ -118,13 +116,13 @@ void servidorClienteComunicacion(void *socketCliente) {
 
     int player;
 
-    if (socketCliente == &socketCliente[0]) {
+    if (socketCliente == &socketArrayClientes[0]) {
         player = 1;
-    } else if (socketCliente == &socketCliente[1]) {
+    } else if (socketCliente == &socketArrayClientes[1]) {
         player = 2;
-    } else if (socketCliente == &socketCliente[2]) {
+    } else if (socketCliente == &socketArrayClientes[2]) {
         player = 3;
-    } else if (socketCliente == &socketCliente[3]) {
+    } else if (socketCliente == &socketArrayClientes[3]) {
         player = 4;
     } else {
         return;
@@ -143,9 +141,8 @@ void servidorClienteComunicacion(void *socketCliente) {
             json_object *respuesta = data_toSend();
             sendJson((int *) socketCliente, respuesta);
         } else {
-            printf("Cliente %d ha cerrado la conexión\n", player);
-            *(int *) socketCliente = -1;
-            //pthread_cancel(threadArray[player - 1]);
+            printf("Cliente %d ha cerrado la conexión del socket %d\n", player, *(int *) socketCliente);
+            cleanUp(&player, (int *) socketCliente);
             pthread_exit(NULL);
         }
     }
@@ -182,4 +179,13 @@ char *getLine(void) {
     }
     *line = '\0';
     return linep;
+}
+
+void cleanUp(int *player, int *socketCliente) {
+    numeroClientes--;
+    close(*socketCliente);
+    *socketCliente = -1;
+    threadArray[*player - 1] = NULL;
+    cleanUpPlayer(player);
+    *player = 0;
 }

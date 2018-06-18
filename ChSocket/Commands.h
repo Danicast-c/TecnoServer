@@ -20,7 +20,7 @@
 
 #define MAX_CLIENTS 4
 
-void newClient(int servidor, int *clientes, int *nClientes);
+void newClient(int servidor, int *clientes, int *nClientes, int *posicionEnArray);
 
 int maxMember(const int *tabla, int n);
 

@@ -357,48 +357,21 @@ json_object* data_toSend (){
     return masterJson ;
 }
 
-void cleanPlayers(void) {
-    json_object *cleanJson1 = json_object_new_object();
-    json_object *cleanJson2 = json_object_new_object();
-    json_object *cleanJson3 = json_object_new_object();
-    json_object *cleanJson4 = json_object_new_object();
+void cleanUpPlayer(const int *player) {
 
-    json_object *p1 = json_object_new_int(1);
-    json_object *p2 = json_object_new_int(2);
-    json_object *p3 = json_object_new_int(3);
-    json_object *p4 = json_object_new_int(4);
+    json_object *cleanJson = json_object_new_object();
 
+    json_object *p_id = json_object_new_int(*player);
     json_object *p_pos = json_object_new_int(0);
     json_object *p_x = json_object_new_double(0);
     json_object *p_speed = json_object_new_int(0);
     json_object *p_life = json_object_new_int(0);
 
-    json_object_object_add(cleanJson1, "id", p1);
-    json_object_object_add(cleanJson1, "x", p_x);
-    json_object_object_add(cleanJson1, "position", p_pos);
-    json_object_object_add(cleanJson1, "speed", p_speed);
-    json_object_object_add(cleanJson1, "life", p_life);
+    json_object_object_add(cleanJson, "id", p_id);
+    json_object_object_add(cleanJson, "x", p_x);
+    json_object_object_add(cleanJson, "position", p_pos);
+    json_object_object_add(cleanJson, "speed", p_speed);
+    json_object_object_add(cleanJson, "life", p_life);
 
-    json_object_object_add(cleanJson2, "id", p2);
-    json_object_object_add(cleanJson2, "x", p_x);
-    json_object_object_add(cleanJson2, "position", p_pos);
-    json_object_object_add(cleanJson2, "speed", p_speed);
-    json_object_object_add(cleanJson2, "life", p_life);
-
-    json_object_object_add(cleanJson3, "id", p3);
-    json_object_object_add(cleanJson3, "x", p_x);
-    json_object_object_add(cleanJson3, "position", p_pos);
-    json_object_object_add(cleanJson3, "speed", p_speed);
-    json_object_object_add(cleanJson3, "life", p_life);
-
-    json_object_object_add(cleanJson4, "id", p4);
-    json_object_object_add(cleanJson4, "x", p_x);
-    json_object_object_add(cleanJson4, "position", p_pos);
-    json_object_object_add(cleanJson4, "speed", p_speed);
-    json_object_object_add(cleanJson4, "life", p_life);
-
-    json_Parser(p1);
-    json_Parser(p2);
-    json_Parser(p3);
-    json_Parser(p4);
+    json_Parser(cleanJson);
 }

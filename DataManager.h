@@ -25,7 +25,7 @@ void crearBomba(int x, int pos);
 void crearBoost(int x, int pos);
 void crearVida(int x, int pos);
 
-void cleanPlayers(void);
+void cleanUpPlayer(const int *player);
 
 //----------------------Player_# = [id,x,pos,speed,life]
 

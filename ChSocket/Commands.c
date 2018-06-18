@@ -9,28 +9,30 @@
  * Se le pasa el socket servidor y el array de clientes, con el número de
  * clientes ya conectados.
  */
-void newClient(int servidor, int *clientes, int *nClientes) {
+void newClient(int servidor, int *clientes, int *nClientes, int *posicionEnArray) {
 
-    /* Acepta la conexión con el cliente, guardándola en el array */
-    clientes[*nClientes] = Acepta_Conexion_Cliente(servidor);
-    (*nClientes)++;
+    for (; *posicionEnArray < MAX_CLIENTS; (*posicionEnArray)++) {
+        if (clientes[*posicionEnArray] == -1) {
+            clientes[*posicionEnArray] = Acepta_Conexion_Cliente(
+                    servidor);    /* Acepta la conexión con el cliente, guardándola en el array */
+            (*nClientes)++;
+            break;
+        }
+    }
 
-    /* Si se ha superado el maximo de clientes, se cierra la conexión,
-     * se deja tal como estaba y se vuelve. */
-    if ((*nClientes) >= MAX_CLIENTS) {
-        close(clientes[(*nClientes) - 1]);
-        (*nClientes)--;
+    if (*posicionEnArray == MAX_CLIENTS) {
+        *posicionEnArray = 0;
         return;
     }
 
     json_object *jsonID = json_object_new_object();
-    json_object *id = json_object_new_int(*nClientes);
+    json_object *id = json_object_new_int(*posicionEnArray + 1);
     json_object_object_add(jsonID, "id", id);
 
     //sendString(clientes, *nClientes, "Bienvenido");
-    sendJson(&clientes[*nClientes - 1], jsonID);
+    sendJson(&clientes[*posicionEnArray], jsonID);
     /* Escribe en pantalla que ha aceptado al cliente y vuelve */
-    printf("Aceptado cliente %d\n", *nClientes);
+    printf("Aceptado cliente número %d y jugador %d\n", *nClientes, *posicionEnArray + 1);
 
 }
 
