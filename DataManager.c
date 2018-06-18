@@ -13,19 +13,31 @@ struct Player player_4;
 
 double bombas[50][4] = {{1,5, 500,  1},
                         {2,2, 2000,  1},
-                        {3,6, 3000, 1}};
-int bombas_index = 3;
+                        {3,3, 12000,  1},
+                        {4,7, 24000,  1},
+                        {5,1, 700,  1},
+                        {6,8, 2700,  1},
+                        {7,6, 4278, 1}};
+int bombas_index = 7;
 
 double vidas[50][4] = {{1,7, 550,  1},
-                       {2,2, 2050,  1},
-                       {3,1, 3050, 1},
-                       {4,5, 5700, 1}};
-int vidas_index = 4;
+                       {2,2, 2957,  1},
+                       {3,5, 6973, 1},
+                       {4,8, 13570, 1},
+                       {5,7, 15000, 1},
+                       {6,2, 20000, 1},
+                       {7,1, 23000, 1},
+                       {8,5, 27000, 1}};
+int vidas_index = 8;
 
 double boost[50][4] = {{1,5, 600,  1},
                        {2,8, 2100,  1},
-                       {3,9, 3050, 1},
-                        {4,5, 5000, 1}};
+                       {3,9, 838, 1},
+                       {4,9, 4000, 1},
+                       {5,9, 6000, 1},
+                       {6,9, 10000, 1},
+                       {7,9, 15000, 1},
+                        {8,5, 20000, 1}};
 int boost_index = 4;
 
 /**
@@ -126,7 +138,7 @@ void json_Parser(json_object *jplayer) {
 
     pthread_mutex_lock(&lock);
 
-    printf ("The json object created: %s \n",json_object_to_json_string(jplayer));
+   // printf ("The json object created: %s \n",json_object_to_json_string(jplayer));
 
     int id = json_object_get_int(json_object_object_get(jplayer,"id"));
     double x = json_object_get_double(json_object_object_get(jplayer, "x"));
@@ -379,7 +391,7 @@ json_object* data_toSend (){
     json_object_object_add(masterJson,"boost", boostArray);
 
 
-    printf("SENDED json object created: %s\n", json_object_to_json_string(masterJson));
+    //printf("SENDED json object created: %s\n", json_object_to_json_string(masterJson));
 
     return masterJson ;
 }
