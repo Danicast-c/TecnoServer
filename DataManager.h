@@ -19,27 +19,34 @@ struct Player {
     int life;
 };
 
-void json_Parser(json_object * jplayer);
-json_object* data_toSend ();
-void crearBomba(int x, int pos);
-void crearBoost(int x, int pos);
-void crearVida(int x, int pos);
-void bomb_Remove(int id);
-void life_Remove(int id);
-void boost_Remove(int id);
+int json_Parser(json_object *jplayer);
+
+json_object *dataToSend();
+
+void bombAdder(int x, int pos);
+
+void speedAdder(int x, int pos);
+
+void lifeAdder(int x, int pos);
+
+void bombRemover(int id);
+
+void lifeRemover(int id);
+
+void speedRemover(int id);
 
 void cleanUpPlayer(const int *player);
 
 //----------------------Player_# = [id,x,pos,speed,life]
 
-double bombas[50][4];
-int bombas_index;
+double bombs[50][4];
+int bombs_index;
 
-double vidas[50][4];
-int vidas_index;
+double lives[50][4];
+int life_index;
 
-double boost[50][4];
-int boost_index;
+double speed[50][4];
+int speed_index;
 
 
 extern struct Player player_1;

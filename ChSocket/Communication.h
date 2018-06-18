@@ -17,21 +17,24 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define MAX_CLIENTS 4
 
-void newClient(int servidor, int *clientes, int *nClientes, int *posicionEnArray);
+void newClient(int server, int *clients, int *numberClients, int *positionInArray);
 
-int maxMember(const int *tabla, int n);
+int maxMember(const int *table, int n);
 
-void trimClients(int *tabla, int *n);
+void trimClients(int *table, int *n);
 
-void sendString(int *clientes, int cliente, const char *dato);
+void sendString(int *clients, int client, const char *data);
 
-char *receiveString(const int *cliente, int str_len);
+char *receiveString(const int *client, int str_len);
 
-json_object *receiveJson(const int *cliente, int str_len);
+json_object *receiveJson(const int *client, int str_len);
 
-void sendJson(const int *cliente, json_object *dato);
+void sendJson(const int *client, json_object *data);
+
+int textToInt(char *text);
 
 #endif //TECNSERVER_COMMANDS_H

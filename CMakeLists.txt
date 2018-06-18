@@ -10,7 +10,7 @@ find_package(Threads)
 add_compile_options("-L/lib -ljson-c")
 link_libraries("-L/lib -ljson-c")
 
-add_executable(Servidor
+add_executable(TecnoServer
         ChSocket/Socket.c
         ChSocket/Socket.h
         ChSocket/Socket_Cliente.c
@@ -19,13 +19,13 @@ add_executable(Servidor
         ChSocket/Socket_Servidor.h
 
         CMakeLists.txt
-        constants.c
-        constants.h
-        datamanager.c
-        datamanager.h
-        ChSocket/Commands.h
-        ChSocket/Commands.c
+        Constants.c
+        Constants.h
+        DataManager.c
+        DataManager.h
+        ChSocket/Communication.h
+        ChSocket/Communication.c
         main.c)
 
-target_link_libraries(Servidor ${CMAKE_THREAD_LIBS_INIT})
-
+target_link_libraries(TecnoServer ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(TecnoServer m)

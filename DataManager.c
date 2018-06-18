@@ -11,16 +11,16 @@ struct Player player_2;
 struct Player player_3;
 struct Player player_4;
 
-double bombas[50][4] = {{1,5, 500,  1},
-                        {2,2, 2000,  1},
-                        {3,3, 12000,  1},
-                        {4,7, 24000,  1},
-                        {5,1, 700,  1},
-                        {6,8, 2700,  1},
-                        {7,6, 4278, 1}};
-int bombas_index = 7;
+double bombs[50][4] = {{1, 5, 500,   1},
+                       {2, 2, 2000,  1},
+                       {3, 3, 12000, 1},
+                       {4, 7, 24000, 1},
+                       {5, 1, 700,   1},
+                       {6, 8, 2700,  1},
+                       {7, 6, 4278,  1}};
+int bombs_index = 7;
 
-double vidas[50][4] = {{1,7, 550,  1},
+double lives[50][4] = {{1, 7, 550,  1},
                        {2,2, 2957,  1},
                        {3,5, 6973, 1},
                        {4,8, 13570, 1},
@@ -28,9 +28,9 @@ double vidas[50][4] = {{1,7, 550,  1},
                        {6,2, 20000, 1},
                        {7,1, 23000, 1},
                        {8,5, 27000, 1}};
-int vidas_index = 8;
+int life_index = 8;
 
-double boost[50][4] = {{1,5, 600,  1},
+double speed[50][4] = {{ 1, 5, 600,  1},
                        {2,8, 2100,  1},
                        {3,9, 838, 1},
                        {4,9, 4000, 1},
@@ -38,7 +38,7 @@ double boost[50][4] = {{1,5, 600,  1},
                        {6,9, 10000, 1},
                        {7,9, 15000, 1},
                         {8,5, 20000, 1}};
-int boost_index = 4;
+int speed_index = 8;
 
 /**
  * Funcion usada para que el servidor cree las bombas
@@ -46,18 +46,18 @@ int boost_index = 4;
  * @param x    Es la posicion en x que tendra la bomba asi el cliente sabra donde pintarla, va del 1 al 10
  * @param pos   Es la posicion respecto al largo de la pista que tendra la bomba, va de 0 a 100
  */
-void crearBomba(int x, int pos){
+void bombAdder(int x, int pos) {
 
     if (0<= x <= 10 && 0<=pos){
-        double x_tosend = x;
-        double pos_tosend = pos;
+        double xToSend = x;
+        double posToSend = pos;
 
 
-        bombas[bombas_index][0] = bombas_index+1;
-        bombas[bombas_index][1] = x_tosend;
-        bombas[bombas_index][2] = pos_tosend;
-        bombas[bombas_index][3] = 1;
-        bombas_index+=1;
+        bombs[bombs_index][0] = bombs_index + 1;
+        bombs[bombs_index][1] = xToSend;
+        bombs[bombs_index][2] = posToSend;
+        bombs[bombs_index][3] = 1;
+        bombs_index += 1;
 
 
 
@@ -72,17 +72,17 @@ void crearBomba(int x, int pos){
  * @param x     Es la posicion en x que tendra la vida asi el cliente sabra donde pintarla, va del 1 al 10
  * @param pos   Es la posicion respecto al largo de la pista que tendra la vida, va de 0 a 100
  */
-void crearVida(int x, int pos){
+void lifeAdder(int x, int pos) {
 
     if (0<= x <= 10 && 0<=pos){
-        double x_tosend = x;
-        double pos_tosend = pos;
+        double xToSend = x;
+        double posToSend = pos;
 
-        vidas[vidas_index][0] = vidas_index+1;
-        vidas[vidas_index][1] = x_tosend;
-        vidas[vidas_index][2] = pos_tosend;
-        vidas[vidas_index][3] = 1;
-        vidas_index= vidas_index+1;
+        lives[life_index][0] = life_index + 1;
+        lives[life_index][1] = xToSend;
+        lives[life_index][2] = posToSend;
+        lives[life_index][3] = 1;
+        life_index = life_index + 1;
 
 
     } else {
@@ -96,21 +96,21 @@ void crearVida(int x, int pos){
  * @param x     Es la posicion en x que tendra el boost asi el cliente sabra donde pintarla, va del 1 al 10
  * @param pos   Es la posicion respecto al largo de la pista que tendra el boost, va de 0 a 100
  */
-void crearBoost(int x, int pos){
+void speedAdder(int x, int pos) {
 
     if (0<= x <= 10 && 0<=pos){
-        double x_tosend = x;
-        double pos_tosend = pos;
+        double xToSend = x;
+        double posToSend = pos;
 
-        printf("antes x: %f \n",boost[boost_index][1]);
+        printf("antes x: %f \n", speed[speed_index][1]);
 
-        boost[boost_index+1][0] = boost_index+1;
-        boost[boost_index+1][1] = x_tosend;
-        boost[boost_index+1][2] = pos_tosend;
-        boost[boost_index+1][3] = 1;
-        boost_index= boost_index + 1;
+        speed[speed_index + 1][0] = speed_index + 1;
+        speed[speed_index + 1][1] = xToSend;
+        speed[speed_index + 1][2] = posToSend;
+        speed[speed_index + 1][3] = 1;
+        speed_index = speed_index + 1;
 
-        printf("desp x: %f \n",boost[boost_index][1]);
+        printf("desp x: %f \n", speed[speed_index][1]);
 
     } else {
         printf("El valor de X debe estar entre 0 y 10, el valor de Pos entre 0 y 100");
@@ -123,21 +123,28 @@ void crearBoost(int x, int pos){
  * @param jplayer   recibe el json_object que fue recibido mediante el socket
  * @param player_Id un valor numerico que indica el numero de jugador que envio el socket
  */
-void bomb_Remove(int id) {
-    bombas[id-1][3]=0;
+void bombRemover(int id) {
+    bombs[id - 1][3] = 0;
 }
-void vidas_Remove(int id) {
-    vidas[id-1][3]=0;
+
+void lifeRemover(int id) {
+    lives[id - 1][3] = 0;
 }
-void boost_Remove(int id) {
-    boost[id-1][3]=0;
+
+void speedRemover(int id) {
+    speed[id - 1][3] = 0;
 }
 
 
-void json_Parser(json_object *jplayer) {
+int json_Parser(json_object *jplayer) {
 
     pthread_mutex_lock(&lock);
 
+    if (jplayer == NULL) {
+        return -5;
+    }
+
+    int resultado = 0;
    // printf ("The json object created: %s \n",json_object_to_json_string(jplayer));
 
     int id = json_object_get_int(json_object_object_get(jplayer,"id"));
@@ -183,24 +190,16 @@ void json_Parser(json_object *jplayer) {
             break; /* optional */
 
         default:
-            printf("Error in jsonParcer\n");
+            printf("Error in jsonParser\n");
+            resultado = -1;
 
     }
 
-
-   // printf("valor es: %d",val);
     free(jplayer);
 
-//    json_object_object_foreach(jplayer, key, val) {
-//        if (key == "x") {
-//            printf("valor de x: %d", json_object_get_int(val));
-//        }
-//
-//        printf("value: %d", json_object_get_int(val));
-//        }
-//
-
     pthread_mutex_unlock(&lock);
+
+    return resultado;
 }
 
 
@@ -210,7 +209,7 @@ void json_Parser(json_object *jplayer) {
  * y se encarga de almacenarlos en un solo json.
  * @return retorna el msterJson con toda la informacion necesaria
  */
-json_object* data_toSend (){
+json_object *dataToSend() {
 
 
 
@@ -282,7 +281,7 @@ json_object* data_toSend (){
     json_object_object_add(jp4,"speed", p4_speed);
     json_object_object_add(jp4,"life", p4_life);
 
-    //----------------------------------------------Array de jugadores
+    //----------------------------------------------Player Array
     json_object *playersArray = json_object_new_array();
 
     json_object_array_add(playersArray,jp1);
@@ -290,93 +289,93 @@ json_object* data_toSend (){
     json_object_array_add(playersArray,jp3);
     json_object_array_add(playersArray,jp4);
 
-    //----------------------------------------------BOMBAS
+    //----------------------------------------------Bombs
 
-    json_object *obsArray = json_object_new_array();
+    json_object *bombsArray = json_object_new_array();
 
-    int imax = sizeof(bombas)/12;
+    int imax = sizeof(bombs) / 12;
 
 
-    for(int i=0;i<bombas_index;i++ ) {
+    for (int i = 0; i < bombs_index; i++) {
 
-        if (bombas[i][3] != 0.0) {
+        if (bombs[i][3] != 0.0) {
             json_object *eleh = json_object_new_object();
 
-            json_object *id = json_object_new_double(bombas[i][0]);
-            json_object *hx = json_object_new_double(bombas[i][1]);
-            json_object *hpos = json_object_new_double(bombas[i][2]);
-            json_object *htime = json_object_new_double(bombas[i][3]);
+            json_object *id = json_object_new_double(bombs[i][0]);
+            json_object *hx = json_object_new_double(bombs[i][1]);
+            json_object *hpos = json_object_new_double(bombs[i][2]);
+            json_object *htime = json_object_new_double(bombs[i][3]);
 
             json_object_object_add(eleh, "id", id);
             json_object_object_add(eleh, "x", hx);
             json_object_object_add(eleh, "position", hpos);
             json_object_object_add(eleh, "active", htime);
 
-            json_object_array_add(obsArray, eleh);
+            json_object_array_add(bombsArray, eleh);
         }
 
     }
-    //----------------------------------------------Vidas
+    //----------------------------------------------Lives
 
-    json_object *vidasArray = json_object_new_array();
+    json_object *livesArray = json_object_new_array();
 
-    int vimax = sizeof(vidas)/12;
+    int vimax = sizeof(lives) / 12;
 
 
-    for(int i=0;i<vidas_index;i++ ) {
+    for (int i = 0; i < life_index; i++) {
 
-        if (vidas[i][3] != 0) {
+        if (lives[i][3] != 0) {
             json_object *eleh = json_object_new_object();
 
-            json_object *id = json_object_new_double(vidas[i][0]);
-            json_object *hx = json_object_new_double(vidas[i][1]);
-            json_object *hpos = json_object_new_double(vidas[i][2]);
-            json_object *htime = json_object_new_double(vidas[i][3]);
+            json_object *id = json_object_new_double(lives[i][0]);
+            json_object *hx = json_object_new_double(lives[i][1]);
+            json_object *hpos = json_object_new_double(lives[i][2]);
+            json_object *htime = json_object_new_double(lives[i][3]);
 
             json_object_object_add(eleh, "id", id);
             json_object_object_add(eleh, "x", hx);
             json_object_object_add(eleh, "position", hpos);
             json_object_object_add(eleh, "active", htime);
 
-            json_object_array_add(vidasArray, eleh);
+            json_object_array_add(livesArray, eleh);
         }
 
     }
-    //----------------------------------------------Boost
+    //----------------------------------------------Speed
 
-    json_object *boostArray = json_object_new_array();
+    json_object *speedArray = json_object_new_array();
 
-    int bimax = sizeof(vidas)/12;
+    int bimax = sizeof(lives) / 12;
 
 
-    for(int i=0;i<boost_index+1;i++ ) {
+    for (int i = 0; i < speed_index + 1; i++) {
 
-        if (boost[i][3] != 0.0) {
+        if (speed[i][3] != 0.0) {
             json_object *eleh = json_object_new_object();
 
-            json_object *id = json_object_new_double(boost[i][0]);
-            json_object *hx = json_object_new_double(boost[i][1]);
-            json_object *hpos = json_object_new_double(boost[i][2]);
-            json_object *htime = json_object_new_double(boost[i][3]);
+            json_object *id = json_object_new_double(speed[i][0]);
+            json_object *hx = json_object_new_double(speed[i][1]);
+            json_object *hpos = json_object_new_double(speed[i][2]);
+            json_object *htime = json_object_new_double(speed[i][3]);
 
             json_object_object_add(eleh, "id", id);
             json_object_object_add(eleh, "x", hx);
             json_object_object_add(eleh, "position", hpos);
             json_object_object_add(eleh, "active", htime);
 
-            json_object_array_add(boostArray, eleh);
+            json_object_array_add(speedArray, eleh);
         }
 
     }
 
 
     //----------------------------------------------Array de jugadores
-    json_object *osbstaclesArray = json_object_new_array();
+    json_object *obstaclesArray = json_object_new_array();
 
-    json_object_array_add(osbstaclesArray,jp1);
-    json_object_array_add(osbstaclesArray,jp2);
-    json_object_array_add(osbstaclesArray,jp3);
-    json_object_array_add(osbstaclesArray,jp4);
+    json_object_array_add(obstaclesArray, jp1);
+    json_object_array_add(obstaclesArray, jp2);
+    json_object_array_add(obstaclesArray, jp3);
+    json_object_array_add(obstaclesArray, jp4);
 
 
     //-----------------------------------------------add a master
@@ -384,14 +383,14 @@ json_object* data_toSend (){
     json_object_object_add(masterJson,"players", playersArray);
 
 
-    json_object_object_add(masterJson,"bombas", obsArray);
+    json_object_object_add(masterJson, "bombs", bombsArray);
 
-    json_object_object_add(masterJson,"vidas", vidasArray);
+    json_object_object_add(masterJson, "lives", livesArray);
 
-    json_object_object_add(masterJson,"boost", boostArray);
+    json_object_object_add(masterJson, "speed", speedArray);
 
 
-    //printf("SENDED json object created: %s\n", json_object_to_json_string(masterJson));
+    printf("SENDED json object created: %s\n", json_object_to_json_string(masterJson));
 
     return masterJson ;
 }
