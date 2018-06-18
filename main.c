@@ -28,11 +28,11 @@ int main()
     if (err != 0)
         printf("\ncan't create master thread :[%s]", strerror(err));
     else {
-        //pthread_detach(threadListener);
-        pthread_join(threadListener, NULL);
+        pthread_detach(threadListener);
+        //pthread_join(threadListener, NULL);
     }
 
-    while (0) {
+    while (1) {
         printf("Escriba el comando a ejecutar (crearBomba, crearVida o crearBoost): ");
         char *comando = getLine();
         printf("Escriba la posicion horizontal del objeto: ");
@@ -101,8 +101,12 @@ void escucharPorClientes(void) {
             if (err != 0)
                 printf("\ncan't create thread :[%s]", strerror(err));
             else {
-                pthread_join((threadArray[i]), NULL);
+                pthread_detach((threadArray[i]));
             }
+        }
+
+        if (numeroClientes = 0) {
+            cleanPlayers();
         }
     }
 }
@@ -141,7 +145,8 @@ void servidorClienteComunicacion(void *socketCliente) {
         } else {
             printf("Cliente %d ha cerrado la conexión\n", player);
             *(int *) socketCliente = -1;
-            pthread_cancel(threadArray[player - 1]);
+            //pthread_cancel(threadArray[player - 1]);
+            pthread_exit(NULL);
         }
     }
 }
