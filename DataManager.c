@@ -38,7 +38,7 @@ double boost[50][4] = {{1,5, 600,  1},
                        {6,9, 10000, 1},
                        {7,9, 15000, 1},
                         {8,5, 20000, 1}};
-int boost_index = 4;
+int boost_index = 8;
 
 /**
  * Funcion usada para que el servidor cree las bombas
