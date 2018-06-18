@@ -8,106 +8,95 @@
 #include <netinet/in.h>
 #include <Commands.h>
 #include <json-c/json.h>
-#include "datamanager.h"
 
+#include "DataManager.h"
 
-
-int socketCliente[MAX_CLIENTS] = {-1, -1, -1, -1};     /* Descriptores de sockets con clientes */
+int socketArrayClientes[MAX_CLIENTS] = {-1, -1, -1, -1};     /* Descriptores de sockets con clientes */
 pthread_t threadArray[MAX_CLIENTS];                 /* Array de threads*/
 
-void server_client_communication(void *ClientSocket);
+void servidorClienteComunicacion(void *ClientSocket);
+
+void escucharPorClientes(void);
+
+char *getLine(void);
 
 int main()
 {
-    int masterSocket;                    /* Descriptor del socket servidor */
-    int numeroClientes = 0;                /* Número clientes conectados */
-    fd_set readFs;                        /* Descriptores de interes para select() */
-    int buffer_size;                    /* Dice de que tamanho es el string que va a entrar */
-    int maximo;							/* Número de descriptor más grande */
-    int i;								/* Para los for */
+    pthread_t threadListener;               /* Thread que escucha por clientes*/
+    int err = pthread_create(&(threadListener), NULL, &escucharPorClientes, NULL);
 
+    if (err != 0)
+        printf("\ncan't create master thread :[%s]", strerror(err));
+    else {
+        //pthread_detach(threadListener);
+        pthread_join(threadListener, NULL);
+    }
 
+    while (0) {
+        printf("Escriba el comando a ejecutar (crearBomba, crearVida o crearBoost): ");
+        char *comando = getLine();
+        printf("Escriba la posicion horizontal del objeto: ");
+        char *x_text = getLine();
+        printf("Escriba la posicion vertical del objeto: ");
+        char *pos_text = getLine();
 
+        int x_value = *x_text - 48;
+        int pos_value = *pos_text - 48;
 
-    //Lo que el servidor recibe del cliente
-    json_object* jp1 = json_object_new_object();
+        if (comando == "crearBomba") {
+            crearBomba(x_value, pos_value);
+        } else if (comando == "crearVida") {
+            crearVida(x_value, pos_value);
+        } else if (comando == "crearBoost") {
+            crearBoost(x_value, pos_value);
+        }
 
-    json_object *p1_id = json_object_new_int(1);
-    json_object *p1_x = json_object_new_int(56);
-    json_object *p1_pos = json_object_new_int(34);
-    json_object *p1_speed = json_object_new_int(78);
-    json_object *p1_life = json_object_new_int(90);
+        printf("Elemento creado\n");
+    }
+}
 
-    json_object_object_add(jp1,"x", p1_id);
-    json_object_object_add(jp1,"x", p1_x);
-    json_object_object_add(jp1,"position", p1_pos);
-    json_object_object_add(jp1,"speed", p1_speed);
-    json_object_object_add(jp1,"life", p1_life);
-
-   // Para guardar los datos recibidos
-    json_Parser(jp1);
-
-   // Lo que el servidor debe enviar al cliente
-    json_object* prueba = data_toSend();
-
-    //mensaje que se recibe del jugador
+void escucharPorClientes(void) {
+    int sockerServidor;                     /* Descriptor del socket servidor */
+    int numeroClientes = 0;                 /* Número clientes conectados */
+    fd_set readFs;                          /* Descriptores de interes para select() */
+    int buffer_size;                        /* Dice de que tamanho es el string que va a entrar */
+    int maximo;                                /* Número de descriptor más grande */
+    int i;                                    /* Para los for */
 
     /* Se abre el socket servidor, avisando por pantalla y saliendo si hay
      * algún problema */
-    masterSocket = Abre_Socket_Inet ("dlsrap");
-    if (masterSocket == -1)
+    sockerServidor = Abre_Socket_Inet("dlsrap");
+    if (sockerServidor == -1)
     {
         perror ("Error al abrir servidor, puerto ya utilizado");
         exit (-1);
     }
 
-    while (0)
+    while (1)
     {
 
         //Borra sockets inactivos al inicio de cada iteración
-        trimClients(socketCliente, &numeroClientes);
+        trimClients(socketArrayClientes, &numeroClientes);
         //Se tiene que limpiar, inicializar y rellenar los file descriptors de los sockets cada vez, para que select sepa cual utilizar
         FD_ZERO (&readFs);
-        FD_SET (masterSocket, &readFs);
+        FD_SET (sockerServidor, &readFs);
         /* Se añaden para select() los sockets con los clientes ya conectados */
         for (i=0; i<numeroClientes; i++)
-            FD_SET (socketCliente[i], &readFs);
+            FD_SET (socketArrayClientes[i], &readFs);
 
         /* Se el valor del descriptor más grande. Si no hay ningún cliente,
          * devolverá 0 */
-        maximo = maxMember(socketCliente, numeroClientes);
+        maximo = maxMember(socketArrayClientes, numeroClientes);
 
-        if (maximo < masterSocket)
-            maximo = masterSocket;
-
+        if (maximo < sockerServidor)
+            maximo = sockerServidor;
 
         select (maximo + 1, &readFs, NULL, NULL, NULL);//Aqui queda esperando el servidor a que haya actividad en algun fd(file descriptor) activo
 
-        /* Se comprueba si algún cliente ya conectado ha enviado algo */
-//        for (i=0; i<numeroClientes; i++)
-//        {
-//            if (FD_ISSET (socketCliente[i], &readFs))
-//            {
-//                /* Se lee lo enviado por el cliente y se escribe en pantalla */
-//                if ((Lee_Socket (socketCliente[i], (char *)&buffer_size, sizeof(int)) > 0)) { //si es mayor a 0 quiere decir que está entrando un dato
-//                    int str_len = ntohl(
-//                            (uint32_t) buffer_size);//Buffer size tiene el tamaño del paquete en int pero en formato de red, hay que pasarlo a int de C.
-//                    char* mensaje= receiveString(socketCliente, i + 1, str_len);
-//                    printf("Paquete de %d bytes recibido: %s\n",(int)strlen(mensaje),mensaje);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Mae a este punto ya está listo el mensaje para mandarlo al otro cliente, se usa
-//                    free(mensaje);//aqui ya muere el mensaje, está en heap, ¡HAY QUE HACER EL FREE MUY IMPORTANTE!
-//                }else
-//                {
-//                    printf ("Cliente %d ha cerrado la conexión\n", i+1);
-//                    socketCliente[i] = -1;//se "desactiva" el socket, mas adelante la funcion trimclients lo borra
-//                }
-//            }
-//        }
-
-
-        if (FD_ISSET (masterSocket, &readFs)) {//verifica si hay clientes nuevos y los registra
-            newClient(masterSocket, socketCliente, &numeroClientes);
-            int err = pthread_create(&(threadArray[i]), NULL, &server_client_communication,
-                                     (void *) &socketCliente[numeroClientes - 1]);
+        if (FD_ISSET (sockerServidor, &readFs)) {//verifica si hay clientes nuevos y los registra
+            newClient(sockerServidor, socketArrayClientes, &numeroClientes);
+            int err = pthread_create(&(threadArray[i]), NULL, &servidorClienteComunicacion,
+                                     (void *) &socketArrayClientes[numeroClientes - 1]);
 
             if (err != 0)
                 printf("\ncan't create thread :[%s]", strerror(err));
@@ -118,7 +107,7 @@ int main()
     }
 }
 
-void server_client_communication(void *socketCliente) {
+void servidorClienteComunicacion(void *socketCliente) {
 
     int cancelability;
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &cancelability);
@@ -146,7 +135,7 @@ void server_client_communication(void *socketCliente) {
             int str_len = ntohl(
                     (uint32_t) buffer_size);//Buffer size tiene el tamaño del paquete en int pero en formato de red, hay que pasarlo a int de C.
             json_object *mensaje = receiveJson((int *) socketCliente, str_len);
-            json_Parser(mensaje, player);
+            json_Parser(mensaje);
             json_object *respuesta = data_toSend();
             sendJson((int *) socketCliente, respuesta);
         } else {
@@ -155,4 +144,37 @@ void server_client_communication(void *socketCliente) {
             pthread_cancel(threadArray[player - 1]);
         }
     }
+}
+
+
+char *getLine(void) {
+    char *line = malloc(100), *linep = line;
+    size_t lenmax = 100, len = lenmax;
+    int c;
+
+    if (line == NULL)
+        return NULL;
+
+    for (;;) {
+        c = fgetc(stdin);
+        if (c == EOF)
+            break;
+
+        if (--len == 0) {
+            len = lenmax;
+            char *linen = realloc(linep, lenmax *= 2);
+
+            if (linen == NULL) {
+                free(linep);
+                return NULL;
+            }
+            line = linen + (line - linep);
+            linep = linen;
+        }
+
+        if ((*line++ = c) == '\n')
+            break;
+    }
+    *line = '\0';
+    return linep;
 }

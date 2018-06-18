@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <json-c/json.h>
-#include "datamanager.h"
+#include "DataManager.h"
 
 char player_1[5]={0,0,0,0,0};
 char player_2[5]={0,0,0,0,0};

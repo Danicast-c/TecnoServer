@@ -23,8 +23,12 @@ void newClient(int servidor, int *clientes, int *nClientes) {
         return;
     }
 
+    json_object *jsonID = json_object_new_object();
+    json_object *id = json_object_new_int(*nClientes);
+    json_object_object_add(jsonID, "id", id);
 
-    sendString(clientes, *nClientes, "Bienvenido");
+    //sendString(clientes, *nClientes, "Bienvenido");
+    sendJson(&clientes[*nClientes], jsonID);
     /* Escribe en pantalla que ha aceptado al cliente y vuelve */
     printf("Aceptado cliente %d\n", *nClientes);
 

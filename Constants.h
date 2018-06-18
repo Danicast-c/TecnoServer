@@ -5,5 +5,5 @@
 #ifndef SERVIDOR_CONSTANTS_H
 #define SERVIDOR_CONSTANTS_H
 
-struct constants;
+struct Constants;
 #endif //SERVIDOR_CONSTANTS_H
