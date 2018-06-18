@@ -10,7 +10,7 @@ find_package(Threads)
 add_compile_options("-L/lib -ljson-c")
 link_libraries("-L/lib -ljson-c")
 
-add_executable(TecnoServer
+add_executable(Servidor
         ChSocket/Socket.c
         ChSocket/Socket.h
         ChSocket/Socket_Cliente.c
@@ -27,4 +27,5 @@ add_executable(TecnoServer
         ChSocket/Commands.c
         main.c)
 
-target_link_libraries(TecnoServer ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(Servidor ${CMAKE_THREAD_LIBS_INIT})
+

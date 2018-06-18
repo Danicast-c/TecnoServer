@@ -11,10 +11,27 @@
 #include <pthread.h>
 #include <json-c/json.h>
 
-void json_Parser(json_object * jplayer, int playerId);
+void json_Parser(json_object * jplayer);
 json_object* data_toSend ();
+void crearBomba(int x, int pos);
+void crearBoost(int x, int pos);
+void crearVida(int x, int pos);
 
 //----------------------Player_# = [id,x,pos,speed,life]
+
+int bombas [50][3];
+int bombas_index;
+
+int vidas [50][3];
+int vidas_index;
+
+int boost [50][3];
+int boost_index;
+
+
+
+
+
 extern char player_1[5];
 extern char player_2[5];
 extern char player_3[5];

@@ -8,8 +8,9 @@
 #include <netinet/in.h>
 #include <Commands.h>
 #include <json-c/json.h>
-
 #include "datamanager.h"
+
+
 
 int socketCliente[MAX_CLIENTS] = {-1, -1, -1, -1};     /* Descriptores de sockets con clientes */
 pthread_t threadArray[MAX_CLIENTS];                 /* Array de threads*/
@@ -25,26 +26,29 @@ int main()
     int maximo;							/* Número de descriptor más grande */
     int i;								/* Para los for */
 
+
+
+
     //Lo que el servidor recibe del cliente
-    //json_object* jp1 = json_object_new_object();
+    json_object* jp1 = json_object_new_object();
 
-    //json_object *p1_id = json_object_new_int(12);
-    //json_object *p1_x = json_object_new_int(56);
-    //json_object *p1_pos = json_object_new_int(34);
-    //json_object *p1_speed = json_object_new_int(78);
-    //json_object *p1_life = json_object_new_int(90);
+    json_object *p1_id = json_object_new_int(1);
+    json_object *p1_x = json_object_new_int(56);
+    json_object *p1_pos = json_object_new_int(34);
+    json_object *p1_speed = json_object_new_int(78);
+    json_object *p1_life = json_object_new_int(90);
 
-    //json_object_object_add(jp1,"id", p1_id );
-    //json_object_object_add(jp1,"x", p1_x);
-    //json_object_object_add(jp1,"position", p1_pos);
-    //json_object_object_add(jp1,"speed", p1_speed);
-    //json_object_object_add(jp1,"life", p1_life);
+    json_object_object_add(jp1,"x", p1_id);
+    json_object_object_add(jp1,"x", p1_x);
+    json_object_object_add(jp1,"position", p1_pos);
+    json_object_object_add(jp1,"speed", p1_speed);
+    json_object_object_add(jp1,"life", p1_life);
 
-    //Para guardar los datos recibidos
-    //json_Parser(jp1,1);
+   // Para guardar los datos recibidos
+    json_Parser(jp1);
 
-    //Lo que el servidor debe enviar al cliente
-    //json_object* prueba = data_toSend();
+   // Lo que el servidor debe enviar al cliente
+    json_object* prueba = data_toSend();
 
     //mensaje que se recibe del jugador
 
@@ -57,7 +61,7 @@ int main()
         exit (-1);
     }
 
-    while (1)
+    while (0)
     {
 
         //Borra sockets inactivos al inicio de cada iteración
