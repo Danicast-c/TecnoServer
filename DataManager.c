@@ -38,6 +38,7 @@ double speed[50][4] = {{ 1, 5, 600,  1},
                        {6,9, 10000, 1},
                        {7,9, 15000, 1},
                         {8,5, 20000, 1}};
+
 int speed_index = 8;
 
 /**
@@ -140,11 +141,8 @@ int json_Parser(json_object *jplayer) {
 
     pthread_mutex_lock(&lock);
 
-    if (jplayer == NULL) {
-        return -5;
-    }
-
     int resultado = 0;
+
    // printf ("The json object created: %s \n",json_object_to_json_string(jplayer));
 
     int id = json_object_get_int(json_object_object_get(jplayer,"id"));
