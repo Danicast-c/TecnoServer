@@ -7,3 +7,6 @@ Una vez obtenido los archivos necesarios para json-c, se coloca en la carpeta do
   add_compile_options("-L/lib -ljson-c")
   
   link_libraries("-L/lib -ljson-c")
+
+Repositorio de la interfaz gráfica y lógica del juego en https://github.com/Josephvb10/tecnoracer
+Video demostrativo del funcionamiento: pole_racing.mp4
